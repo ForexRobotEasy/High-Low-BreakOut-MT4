@@ -1,0 +1,63 @@
+mql5
+//+------------------------------------------------------------------+
+//|                             High Low BreakOut MT4                 |
+//|            Developer's Site: forexroboteasy.com                   |
+//|                  Development: Forex Robot Easy Team               |
+//|                                                                  |
+//|        Code for enhancing Forex trading with time-specific        |
+//|        strategies, allowing traders to set pending orders         |
+//|         at specific times for buying at the peak price            |
+//|        and selling at the lowest within a pre-determined          |
+//|        time frame, and providing flexibility in trading.          |
+//+------------------------------------------------------------------+
+
+// Include necessary libraries and define variables
+#include <Trade\Trade.mqh>
+CTrade trade;
+datetime asiaSessionStart = D'08:00';
+datetime asiaSessionEnd = D'16:00';
+datetime europeSessionStart = D'08:00';
+datetime europeSessionEnd = D'16:00';
+datetime usSessionStart = D'08:00';
+datetime usSessionEnd = D'16:00';
+
+//+------------------------------------------------------------------+
+//|                            OnTick Function                        |
+//|                 Main function to execute trading logic            |
+//+------------------------------------------------------------------+
+void OnTick()
+{
+    // Check if it's time for Asian session
+    if(IsInSession(asiaSessionStart, asiaSessionEnd))
+    {
+        // Place pending orders for Asian session
+        trade.BuyStop(Ask, 0.1, High[1], 0, 0, 0, 'BuyStop for Asian session');
+        trade.SellStop(Bid, 0.1, Low[1], 0, 0, 0, 'SellStop for Asian session');
+    }
+
+    // Check if it's time for European session
+    else if(IsInSession(europeSessionStart, europeSessionEnd))
+    {
+        // Place pending orders for European session
+        trade.BuyStop(Ask, 0.1, High[1], 0, 0, 0, 'BuyStop for European session');
+        trade.SellStop(Bid, 0.1, Low[1], 0, 0, 0, 'SellStop for European session');
+    }
+
+    // Check if it's time for US session
+    else if(IsInSession(usSessionStart, usSessionEnd))
+    {
+        // Place pending orders for US session
+        trade.BuyStop(Ask, 0.1, High[1], 0, 0, 0, 'BuyStop for US session');
+        trade.SellStop(Bid, 0.1, Low[1], 0, 0, 0, 'SellStop for US session');
+    }
+}
+
+//+------------------------------------------------------------------+
+//|                    IsInSession Function                           |
+//|      Check if current time is within the specified session        |
+//+------------------------------------------------------------------+
+bool IsInSession(datetime sessionStart, datetime sessionEnd)
+{
+    datetime currentTime = TimeCurrent();
+    return (currentTime >= sessionStart && currentTime <= sessionEnd);
+}
